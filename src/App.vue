@@ -1,19 +1,38 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <div class="mh-container">
+      <Menu />
+      <div class="mh-wrapper mh-clearfix">
+        <router-view></router-view>
+        <!-- <test/> -->
+        <Aside />
+      </div>
+      <CopyRight />
+    </div>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+// import HelloWorld from './components/HelloWorld.vue'
+import Menu from "./components/Menu.vue";
+import Aside from "./components/Aside.vue";
+import CopyRight from "./components/CopyRight.vue";
 
+// import test from './components/BulmaTest'
+import "bulma";
+import "../static/css/style.css";
+import "../static/css/font-awesome.min.css";
+import "../static/js/script.js";
 export default {
-  name: 'App',
+  name: "App",
   components: {
-    HelloWorld
+    // HelloWorld,
+    Menu,
+    Aside,
+    CopyRight
+    // test,
   }
-}
+};
 </script>
 
 <style>
@@ -21,7 +40,6 @@ export default {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
   color: #2c3e50;
   margin-top: 60px;
 }
