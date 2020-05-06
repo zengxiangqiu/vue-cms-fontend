@@ -16,28 +16,36 @@
       </div>
       <div class="navbar-menu menu" id="navbarBasicExample">
         <div class="navbar-start">
-          <template v-for="item in items">
+          <template v-for="item in menu">
             <div
               v-if="item.tags.length>0"
               class="navbar-item has-dropdown is-hoverable"
               :key="item.id"
             >
-              <a href :class="[item.isSelect?'current-menu-item':'', 'menu-item','navbar-link' ]">{{ item.title }}</a>
+              <!-- <a @click.stop.prevent ='$router.push(item.link)'
+                
+                :class="[item.isSelect?'current-menu-item':'', 'menu-item','navbar-link' ]"
+              >{{ item.title }}</a> -->
+              <router-link :to="item.link"  :class="[item.isSelect?'current-menu-item':'', 'menu-item','navbar-link' ]" @click.native='SetCurrentLink(item)'>{{ item.title }} </router-link>
               <div class="navbar-dropdown">
-                <a
-                  :href="'tag/'+tag.key"
+                <!-- <a
+                  :href="'/tag/'+tag.key"
                   v-for="tag in item.tags"
                   :key="tag.key"
                   class="navbar-item menu-item"
-                >{{ tag.value }}</a>
+                >{{ tag.value }}</a> -->
+              <router-link :to="'/tag/'+tag.key" v-for="tag in item.tags"  :key="tag.key" class='navbar-item menu-item' @click.native='SetCurrentLink(item)'>{{ tag.value }} </router-link>
+
               </div>
             </div>
-            <a
+            <!-- <a
               :class="[item.isSelect?'current-menu-item':'', 'menu-item','navbar-item' ]"
-              :href="item.category"
+              :href="item.link"
               :key="item.id"
               v-else
-            >{{ item.title }}</a>
+            >{{ item.title }}</a> -->
+              <router-link :to="item.link"  :class="[item.isSelect?'current-menu-item':'', 'menu-item','navbar-item' ]" @click.native='SetCurrentLink(item)' :key="item.id" 
+              v-else>{{ item.title }} </router-link>
           </template>
         </div>
       </div>
@@ -46,25 +54,15 @@
 </template>
 
 <style>
-
-a.navbar-item{
-  padding: 0.5rem 1.75rem;
-}
-
-a.navbar-item:hover {
-  background: #e64946;
-  color: #fff;
-}
-
 .navbar-burger {
   color: #ebebeb;
 }
 
-.navbar-menu{
+.navbar-menu {
   min-height: 3rem;
 }
 
-.menu-item{
+.menu-item {
   display: block;
   color: #fff;
   padding: 10px 20px;
@@ -73,61 +71,53 @@ a.navbar-item:hover {
 </style>
 
 <script>
+import { mapState } from "vuex";
+
 export default {
   data() {
-    return {
-      items: [
+    return {};
+  },
+  computed: mapState(["menu"]),
+  // eslint-disable-next-line no-unused-vars
+  beforeCreate() {
+    this.$store.dispatch("FETCH_MENU");
+  },
+
+  watch: {
+    // eslint-disable-next-line no-unused-vars
+    menu: function(val, oldVal) {
+      var r = this.$route.params.category;
+      var t = this.$route.params.tag;
+      var i = this.$route.params.id;
+      var m = this.$route.path.replace('/','');
+      r = r || t || i || m || "/";
+      try {
+        val.find(x => x.category == r).isSelect = true;
+      } catch (error) {
+        return;
+      }
+    },
+    // '$route' (to, from) {
+    //   const toDepth = to.path.split('/').length
+    //   const fromDepth = from.path.split('/').length
+    //   this.transitionName = toDepth < fromDepth ? 'slide-right' : 'slide-left'
+    // }
+  },
+  methods: {
+    SetCurrentLink: function(item){
+      this.menu.forEach(subMenu=>{
+        if(subMenu === item)
         {
-          id: 1,
-          title: "首页",
-          isSelect: false,
-          category: "/",
-          tags: []
-        },
-        {
-          id: 2,
-          title: "英美文化",
-          isSelect: true,
-          category: "category/culture",
-          tags: [
-            {
-              key: "usa-culture",
-              value: "美国文化"
-            },
-            {
-              key: "uk-culture",
-              value: "英国文化"
-            },
-            {
-              key: "comics",
-              value: "英语漫画"
-            },
-            {
-              key: "the-making-of-a-nation",
-              value: "美国建国史话"
-            }
-          ]
-        },
-        {
-          id: 3,
-          title: "英语文摘",
-          isSelect: false,
-          category: "category/digest",
-          tags: [
-            {
-              key: "bilingual-reading",
-              value: "双语阅读"
-            },
-            {
-              key: "economist-official-translation-digest",
-              value: "经济学人官方译文"
-            }
-          ]
+          subMenu.isSelect = true;
         }
-      ],
-      isOpen: false
-    };
-  }
+        else
+        {
+          subMenu.isSelect = false;
+        }
+      })
+    }
+  },
+
 };
 
 document.addEventListener("DOMContentLoaded", () => {

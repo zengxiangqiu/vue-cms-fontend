@@ -60,26 +60,14 @@
 
 <script>
 export default {
-  data() {
-    return{
-      
-    }
-  },
-  props: {
-    pagination: {
-      page: 3,
-      pageCount: 20,
-      perPage:10,
-    }
-  },
+  props: ['pagination'],
   methods: {
     clickCallback(pageNum) {
       // this.pagination.page = pageNum;
       // eslint-disable-next-line no-debugger
-      debugger;
-      console.log(this.pagination.page);
+      // console.log(this.pagination.page);
       this.$emit('OnPage',pageNum);
     }
-  }
+  },
 };
 </script>

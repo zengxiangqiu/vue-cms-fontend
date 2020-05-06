@@ -1,24 +1,23 @@
 <template>
   <aside class="mh-sidebar">
-    <searchbox/>
-    <customposts :entries='entries'/>
+    <searchbox :showHeader="false"/>
+    <customposts/>
+    <tags/>
   </aside>
 </template>
 
 <script>
 
 import searchbox from './SearchBox.vue';
-import customposts from './CustomPosts.vue'
+import customposts from './CustomPosts.vue';
+import tags from './Tags.vue';
 
 export default {
   components:{
     searchbox,
     customposts,
+    tags
   },
-  data() {
-    return {
-      entries:[]
-    }
-  },
+
 }
 </script>

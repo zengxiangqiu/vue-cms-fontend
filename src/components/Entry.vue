@@ -1,5 +1,5 @@
 <template>
-  <div id="main-content" class="mh-loop mh-content">
+  <div id="main-content" style="min-height:757px" class="mh-loop mh-content">
     <article>
       <header class="entry-header mh-clearfix">
         <h2 class="entry-title">{{ entry.title }}</h2>
@@ -14,7 +14,7 @@
           </span>
           <span class="entry-meta-categories">
             <i class="fa fa-folder-open-o"></i>
-            <a href>{{ entry.category }}</a>
+            <a :href="/category/+category.key">{{ category.value }}</a>
           </span>
           <span class="entry-meta-comments">
             <i class="fa fa-comment-o"></i>
@@ -22,10 +22,8 @@
           </span>
         </p>
       </header>
-      <div class="entry-content mh-clearfix" :inner-html.prop='entry.content | Markdown2Html'>
-        
-      </div>
-      <EntryTag :tags='tags' />
+      <div class="entry-content mh-clearfix" v-html="entry.content"></div>
+      <EntryTag :tags="tags" />
       <div class="mh-widget">
         <div class="textwidget custom-html-widget">
           <h2>
@@ -36,56 +34,59 @@
         </div>
       </div>
     </article>
-    <EntryNav/>
+    <EntryNav  :previous='previous' :next='next' v-if="previous!=null && next!=null"/>
   </div>
 </template>
 
 <script>
-import EntryNav from './EntryNav.vue'
-import EntryTag from './Tag'
-import axios from "axios";
-import MarkdownIt from 'markdown-it';
+import EntryNav from "./EntryNav.vue";
+import EntryTag from "./Tag";
+import MarkdownIt from "markdown-it";
+import { mapState } from "vuex";
 
 let md = new MarkdownIt();
 
 export default {
-  components:{
+  components: {
     EntryNav,
     EntryTag
   },
-  props: {
-    entry:{
-      title: '',
-      author:'',
-      lastModDate:'',
-      countOfComments:'',
-      category:'',
-      content:'',
-    },
-  },
+  props: {},
   data() {
     return {
-      tags:[]  
+      tags: [],
+      previous:{},
+      next:{},
+      category:{}
+    };
+  },
+  computed: mapState(["entry"]),
+
+  watch:{
+    // eslint-disable-next-line no-unused-vars
+    entry: function (val, oldVal) {
+      this.tags = val.tags;
+      this.previous = val.previous;
+      this.next=val.next;
+      this.categovalry = val.category;
+      val.content = this.Markdown2Html(val.content);
     }
   },
-  mounted(){
+  created() {
     var id = this.$route.params.id;
-    axios.get(`http://localhost:3000/api/entrys/${id}`).then((response)=>{
-      this.entry = response.data.data;
-      this.tags=  this.entry.t.map(tag=>{
-        return Object.assign({},{key: tag.EntryCategoryMaster.key, value: tag.EntryCategoryMaster.value})
-      });
-      console.log(this.tags);
-    });
+    this.$store.dispatch("FETCH_ARTICLE", id);
   },
-  filters:{
-    Markdown2Html: function(val){
-      // eslint-disable-next-line no-debugger
-      debugger;
-      return  md.render(val);
+  // filters: {
+  //   Markdown2Html: function(val) {
+  //     // eslint-disable-next-line no-debugger
+  //     debugger;
+  //     return md.render(val);
+  //   }
+  // }
+  methods: {
+     Markdown2Html: function(val) {
+      return md.render(val);
     }
-  }
-
-
-}
+  },
+};
 </script>
