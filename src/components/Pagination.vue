@@ -63,9 +63,6 @@ export default {
   props: ['pagination'],
   methods: {
     clickCallback(pageNum) {
-      // this.pagination.page = pageNum;
-      // eslint-disable-next-line no-debugger
-      // console.log(this.pagination.page);
       this.$emit('OnPage',pageNum);
     }
   },

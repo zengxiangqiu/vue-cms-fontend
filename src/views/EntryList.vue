@@ -1,52 +1,43 @@
 <template>
   <div id="main-content" class="mh-loop mh-content">
-    <!-- <transition name="fade">
-      <div v-if="visiable"> -->
-      <header class="page-header" v-if="header!=''">
-        <h1 class="page-title">{{ header }}</h1>
-      </header>
-        <article class="mh-loop-item" v-for="entry in entries" :key="entry.id">
-          <figure class="mh-loop-thumb">
-            <!-- <a :href="'/'+entry.id" target="_blank" rel="noopener noreferrer">
+    <header class="page-header" v-if="header!=''">
+      <h1 class="page-title">{{ header }}</h1>
+    </header>
+    <article class="mh-loop-item" v-for="entry in entries" :key="entry.id">
+      <figure class="mh-loop-thumb">
+        <!-- <a :href="'/'+entry.id" target="_blank" rel="noopener noreferrer">
             <img v-lazy="entry.imgUrl" alt width="326" height="245" />
-            </a>-->
-            <router-link :to="'/'+entry.id">
-              <img v-lazy="entry.imgUrl" alt width="326" height="245" />
-            </router-link>
-          </figure>
-          <div class="mh-loop-content mh-clearfix">
-            <header class="mh-loop-header">
-              <h3 class="mh-loop-title">
-                <router-link :to="'/'+entry.id">{{entry.title}}</router-link>
-              </h3>
-              <div class="mh-meta mh-loop-meta">
-                <span class="mh-meta-date updated">
-                  <i class="fa fa-clock-o">{{entry.lastModDate | GetChineseFormatDate}}</i>
-                </span>
-                <span class="mh-meta-author author vcard">
-                  <i class="fa fa-user"></i>
-                  <a href="http://" target="_blank" rel="noopener noreferrer">{{entry.author}}</a>
-                </span>
-                <span class="mh-meta-comments">
-                  <i class="fa fa-comment-o"></i>
-                  <a
-                    href="http://"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >{{entry.countOfComments}}</a>
-                </span>
-              </div>
-            </header>
-            <div class="mh-loop-excerpt">
-              <div class="mh-excerpt">
-                <p>{{entry.excerpt}}</p>
-              </div>
-            </div>
+        </a>-->
+        <router-link :to="'/'+entry.id">
+          <img v-lazy="entry.imgUrl" alt width="326" height="245" />
+        </router-link>
+      </figure>
+      <div class="mh-loop-content mh-clearfix">
+        <header class="mh-loop-header">
+          <h3 class="mh-loop-title">
+            <router-link :to="'/'+entry.id">{{entry.title}}</router-link>
+          </h3>
+          <div class="mh-meta mh-loop-meta">
+            <span class="mh-meta-date updated">
+              <i class="fa fa-clock-o">{{entry.lastModDate | GetChineseFormatDate}}</i>
+            </span>
+            <span class="mh-meta-author author vcard">
+              <i class="fa fa-user"></i>
+              <a href="http://" target="_blank" rel="noopener noreferrer">{{entry.author}}</a>
+            </span>
+            <span class="mh-meta-comments">
+              <i class="fa fa-comment-o"></i>
+              <a href="http://" target="_blank" rel="noopener noreferrer">{{entry.countOfComments}}</a>
+            </span>
           </div>
-        </article>
-      <!-- </div>
-    </transition> -->
-
+        </header>
+        <div class="mh-loop-excerpt">
+          <div class="mh-excerpt">
+            <p>{{entry.excerpt}}</p>
+          </div>
+        </div>
+      </div>
+    </article>
     <div>
       <pagination :pagination="pagination" v-on:OnPage="OnPage" v-if="entries.length>0" />
     </div>
@@ -55,7 +46,7 @@
 
 
 <script>
-import Pagination from "./Pagination.vue";
+import Pagination from "../components/Pagination";
 import { mapState } from "vuex";
 import qs from "qs";
 
@@ -112,7 +103,7 @@ export default {
       );
     }
   },
-  mounted() {
+  created() {
     this.$store.dispatch("FETCH_ARTICLES", {
       perPage: this.pagination.perPage,
       page: this.$route.params.page,

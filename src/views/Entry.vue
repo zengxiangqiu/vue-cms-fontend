@@ -34,13 +34,13 @@
         </div>
       </div>
     </article>
-    <EntryNav  :previous='previous' :next='next' v-if="previous!=null && next!=null"/>
+    <EntryNav :previous="previous" :next="next" v-if="previous!=null && next!=null" />
   </div>
 </template>
 
 <script>
-import EntryNav from "./EntryNav.vue";
-import EntryTag from "./Tag";
+import EntryNav from "../components/EntryNav";
+import EntryTag from "../components/Tag";
 import MarkdownIt from "markdown-it";
 import { mapState } from "vuex";
 
@@ -55,19 +55,22 @@ export default {
   data() {
     return {
       tags: [],
-      previous:{},
-      next:{},
-      category:{}
+      previous: {},
+      next: {},
+      category: {}
     };
   },
   computed: mapState(["entry"]),
 
-  watch:{
+  watch: {
     // eslint-disable-next-line no-unused-vars
-    entry: function (val, oldVal) {
+    entry: function(val, oldVal) {
+      if (val.NoFound == true) {
+        this.$router.push("/");
+      }
       this.tags = val.tags;
       this.previous = val.previous;
-      this.next=val.next;
+      this.next = val.next;
       this.categovalry = val.category;
       val.content = this.Markdown2Html(val.content);
     }
@@ -76,17 +79,10 @@ export default {
     var id = this.$route.params.id;
     this.$store.dispatch("FETCH_ARTICLE", id);
   },
-  // filters: {
-  //   Markdown2Html: function(val) {
-  //     // eslint-disable-next-line no-debugger
-  //     debugger;
-  //     return md.render(val);
-  //   }
-  // }
   methods: {
-     Markdown2Html: function(val) {
+    Markdown2Html: function(val) {
       return md.render(val);
     }
-  },
+  }
 };
 </script>

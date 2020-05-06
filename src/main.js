@@ -6,49 +6,19 @@ Vue.use(VueRouter);
 
 Vue.config.productionTip = false
 
-import EntryList from "./components/EntryList.vue";
-import Entry from "./components/Entry.vue";
-const Search = ()=>import('./components/Search.vue');
 import Paginate from 'vuejs-paginate'
-const Aside = ()=>import('./components/Aside.vue');
 Vue.component('paginate', Paginate)
 
 import VueLazyload from 'vue-lazyload'
 Vue.use(VueLazyload, {
   preLoad: 1.3,
-  error: '/error.png',
-  loading: '/loading.gif',
+  error: require('./assets/error.png'),
+  loading: require('./assets/loading.gif'),
   attempt: 1
 })
 
 import store from './store'
-
-const routes = [{
-  path: "/",
-  components: {default:EntryList, aside: Aside},
-  children: [{
-    path: 'tag/:tag',
-    children: [{
-      path: 'page/:page'
-    }]
-  }, {
-    path: 'category/:category',
-    children: [{
-      path: 'page/:page'
-    }]
-  }, {
-    path: 'page/:page',
-  }]
-}
-,{
-  path: "/search",
-  component: Search 
-},
-{
-  path: "/:id([0-9]*)",
-  components: { default:Entry,aside: Aside}
-} 
-]
+import routes from './route'
 
 var router = new VueRouter({
   mode: 'history',
