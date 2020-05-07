@@ -4,7 +4,7 @@ import axios from 'axios'
 import qs from 'qs'
 Vue.use(Vuex)
 
-const host = 'http://localhost:3000/api/entrys'
+const host = process.env.VUE_APP_ROOT_API+'/entrys'
 
 export default new Vuex.Store({
   state: {
@@ -55,7 +55,12 @@ export default new Vuex.Store({
         }
         else
         {
-          commit('SET_HEADER',res.data.header);
+          if(res.data.data.length==0){
+            commit('SET_HEADER','Nothing to be found');
+          }
+          else{
+            commit('SET_HEADER',res.data.header);
+          }
         }
         commit('SET_ARTICLES', res.data.data)
         commit('SET_PAGINATION', res.data.pagination)

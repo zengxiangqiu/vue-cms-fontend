@@ -59,6 +59,8 @@
 </style>
 
 <script>
+
+
 export default {
   props: ['pagination'],
   methods: {

@@ -22,29 +22,13 @@
               class="navbar-item has-dropdown is-hoverable"
               :key="item.id"
             >
-              <!-- <a @click.stop.prevent ='$router.push(item.link)'
-                
-                :class="[item.isSelect?'current-menu-item':'', 'menu-item','navbar-link' ]"
-              >{{ item.title }}</a> -->
-              <router-link :to="item.link"  :class="[item.isSelect?'current-menu-item':'', 'menu-item','navbar-link' ]" @click.native='SetCurrentLink(item)'>{{ item.title }} </router-link>
+              <router-link :to="item.link"  :class="[item.isSelect?'current-menu-item':'', 'menu-item','navbar-link' ]" @click.native='SetCurrentLink(item,$event)' @mouseover.native="ToggleDisplay($event)">{{ item.title }} </router-link>
               <div class="navbar-dropdown">
-                <!-- <a
-                  :href="'/tag/'+tag.key"
-                  v-for="tag in item.tags"
-                  :key="tag.key"
-                  class="navbar-item menu-item"
-                >{{ tag.value }}</a> -->
-              <router-link :to="'/tag/'+tag.key" v-for="tag in item.tags"  :key="tag.key" class='navbar-item menu-item' @click.native='SetCurrentLink(item)'>{{ tag.value }} </router-link>
+              <router-link :to="'/tag/'+tag.key" v-for="tag in item.tags"  :key="tag.key" class='navbar-item menu-item' @click.native='SetCurrentLink(tag,$event)'>{{ tag.value }} </router-link>
 
               </div>
             </div>
-            <!-- <a
-              :class="[item.isSelect?'current-menu-item':'', 'menu-item','navbar-item' ]"
-              :href="item.link"
-              :key="item.id"
-              v-else
-            >{{ item.title }}</a> -->
-              <router-link :to="item.link"  :class="[item.isSelect?'current-menu-item':'', 'menu-item','navbar-item' ]" @click.native='SetCurrentLink(item)' :key="item.id" 
+              <router-link :to="item.link"  :class="[item.isSelect?'current-menu-item':'', 'menu-item','navbar-item' ]" @click.native='SetCurrentLink(item,$event)' :key="item.id" 
               v-else>{{ item.title }} </router-link>
           </template>
         </div>
@@ -104,7 +88,7 @@ export default {
     // }
   },
   methods: {
-    SetCurrentLink: function(item){
+    SetCurrentLink: function(item,element){
       this.menu.forEach(subMenu=>{
         if(subMenu === item)
         {
@@ -115,9 +99,30 @@ export default {
           subMenu.isSelect = false;
         }
       })
+      const el = document.querySelector('.navbar-burger');
+      const target =  el.dataset.target;
+      const $target = document.getElementById(target);
+      el.classList.toggle("is-active");
+      $target.classList.toggle("is-active");
+      try {
+          if(element.target.parentElement.classList.contains('navbar-dropdown')){
+            element.target.parentElement.parentElement.classList.toggle('is-hoverable');
+          }
+          else if(element.target.parentElement.classList.contains('has-dropdown')){
+            element.target.parentElement.classList.toggle('is-hoverable');
+          }
+      // eslint-disable-next-line no-empty
+      } catch (error) {
+        
+      }
+    },
+    ToggleDisplay : function(event){
+      if(!event.target.parentElement.classList.contains('is-hoverable')){
+        event.target.parentElement.classList.toggle('is-hoverable')
+      }
+
     }
   },
-
 };
 
 document.addEventListener("DOMContentLoaded", () => {

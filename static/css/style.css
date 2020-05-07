@@ -763,6 +763,9 @@ h2 {
   .hidden-xs {
     display: none
   }
+  .mh-main-nav{
+    border-bottom: 0px;
+  }
 }
 
 @media screen and (max-width: 620px) {

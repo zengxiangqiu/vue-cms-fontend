@@ -5,7 +5,7 @@
     </h4>
     <i class="fa fa-tag"></i>
     <ul>
-      <li v-for="(tag,index) in tags" :key="index"><router-link :to="tag.link">{{ tag.title }}</router-link></li>
+      <li v-for="(tag,index) in tags" :key="index"><router-link :to="tag.link" @click.native="EnableMenu">{{ tag.title }}</router-link></li>
     </ul>
   </div>
 </template>
@@ -16,9 +16,16 @@
 import {mapState} from 'vuex';
 
 export default {
-  computed: mapState(['tags']),
+  computed: mapState(['tags','menu']),
   created() {
     this.$store.dispatch('FETCH_TAGS');
+  },
+  methods: {
+    EnableMenu: function(){
+      this.menu.forEach(x=>{
+        x.isSelect = false;
+      })
+    }
   },
 }
 </script>

@@ -38,7 +38,7 @@
         </div>
       </div>
     </article>
-    <div>
+    <div> 
       <pagination :pagination="pagination" v-on:OnPage="OnPage" v-if="entries.length>0" />
     </div>
   </div>
@@ -59,7 +59,7 @@ export default {
   components: {
     Pagination
   },
-  computed: mapState(["entries", "pagination", "header", "visiable"]),
+  computed: mapState(["entries", "pagination", "header"]),
   methods: {
     OnPage(pageNum) {
       if (pageNum == 1) {
@@ -80,14 +80,6 @@ export default {
         }
         this.$router.push({ path: path });
       }
-      this.$store.dispatch("FETCH_ARTICLES", {
-        perPage: this.pagination.perPage,
-        page: this.$route.params.page,
-        tag: this.$route.params.tag,
-        category: this.$route.params.category,
-        s: this.$route.query.s
-      });
-      window.scrollTo(0, 0);
     }
   },
   filters: {
