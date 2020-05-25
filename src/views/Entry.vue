@@ -41,10 +41,28 @@
 <script>
 import EntryNav from "../components/EntryNav";
 import EntryTag from "../components/Tag";
-import MarkdownIt from "markdown-it";
+import hljs from 'highlight.js'
+import 'highlight.js/styles/github.css';
+var md = require("markdown-it")({
+  highlight: function(str, lang){
+    if(lang && hljs.getLanguage(lang)){
+      try{
+        return hljs.highlight(lang, str).value;
+      }
+      // eslint-disable-next-line no-empty
+      catch(__){
+        
+      }
+      return '';
+    }
+  }
+})
+
+import ins from 'markdown-it-ins'
 import { mapState } from "vuex";
 
-let md = new MarkdownIt();
+
+md.use(ins);
 
 export default {
   components: {

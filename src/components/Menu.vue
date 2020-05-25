@@ -17,19 +17,7 @@
       <div class="navbar-menu menu" id="navbarBasicExample">
         <div class="navbar-start">
           <template v-for="item in menu">
-            <div
-              v-if="item.tags.length>0"
-              class="navbar-item has-dropdown is-hoverable"
-              :key="item.id"
-            >
-              <router-link :to="item.link"  :class="[item.isSelect?'current-menu-item':'', 'menu-item','navbar-link' ]" @click.native='SetCurrentLink(item,$event)' @mouseover.native="ToggleDisplay($event)">{{ item.title }} </router-link>
-              <div class="navbar-dropdown">
-              <router-link :to="'/tag/'+tag.key" v-for="tag in item.tags"  :key="tag.key" class='navbar-item menu-item' @click.native='SetCurrentLink(tag,$event)'>{{ tag.value }} </router-link>
-
-              </div>
-            </div>
-              <router-link :to="item.link"  :class="[item.isSelect?'current-menu-item':'', 'menu-item','navbar-item' ]" @click.native='SetCurrentLink(item,$event)' :key="item.id" 
-              v-else>{{ item.title }} </router-link>
+            <subMenu :item ='item' :key="item.category" :nested='false'/>
           </template>
         </div>
       </div>
@@ -56,36 +44,18 @@
 
 <script>
 import { mapState } from "vuex";
+import subMenu from './SubMenu'
 
 export default {
   data() {
     return {};
   },
-  computed: mapState(["menu"]),
-  // eslint-disable-next-line no-unused-vars
-  beforeCreate() {
-    this.$store.dispatch("FETCH_MENU");
+  components:{
+    subMenu
   },
-
-  watch: {
-    // eslint-disable-next-line no-unused-vars
-    menu: function(val, oldVal) {
-      var r = this.$route.params.category;
-      var t = this.$route.params.tag;
-      var i = this.$route.params.id;
-      var m = this.$route.path.replace('/','');
-      r = r || t || i || m || "/";
-      try {
-        val.find(x => x.category == r).isSelect = true;
-      } catch (error) {
-        return;
-      }
-    },
-    // '$route' (to, from) {
-    //   const toDepth = to.path.split('/').length
-    //   const fromDepth = from.path.split('/').length
-    //   this.transitionName = toDepth < fromDepth ? 'slide-right' : 'slide-left'
-    // }
+  computed: mapState(["menu"]),
+  created() {
+    this.$store.dispatch("FETCH_MENU");
   },
   methods: {
     SetCurrentLink: function(item,element){

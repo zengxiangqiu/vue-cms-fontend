@@ -4,7 +4,7 @@ import axios from 'axios'
 import qs from 'qs'
 Vue.use(Vuex)
 
-const host = process.env.VUE_APP_ROOT_API+'/entrys'
+const host = process.env.VUE_APP_ROOT_API+'/entries'
 
 export default new Vuex.Store({
   state: {
@@ -53,16 +53,16 @@ export default new Vuex.Store({
         {
           commit('SET_HEADER',"Search Results for " + qJson.s);
         }
-        else
+        else  
         {
-          if(res.data.data.length==0){
+          if(res.data.entries.length==0){
             commit('SET_HEADER','Nothing to be found');
           }
           else{
             commit('SET_HEADER',res.data.header);
           }
         }
-        commit('SET_ARTICLES', res.data.data)
+        commit('SET_ARTICLES', res.data.entries)
         commit('SET_PAGINATION', res.data.pagination)
         // eslint-disable-next-line no-debugger
         commit('SET_VISIABLE',true);
@@ -71,23 +71,23 @@ export default new Vuex.Store({
     FETCH_ARTICLE: ({ commit }, id) => {
       commit('SET_VISIABLE',false);
       axios.get(host+`/${id}`).then((res) => {
-        commit('SET_ARTICLE', res.data.data);
+        commit('SET_ARTICLE', res.data.entry);
         commit('SET_VISIABLE',true);
       })
     },
     FETCH_CUSTOMPOSTS:({commit})=>{
       axios.get(host+'/news').then(res=>{
-        commit('SET_CUSTOMPOSTS',res.data.data);
+        commit('SET_CUSTOMPOSTS',res.data.entries);
       });
     },
     FETCH_MENU: ({commit}) =>{
       axios.get(host+'/menu').then(res=>{
-        commit('SET_MENU', res.data.data);
+        commit('SET_MENU', res.data.menu);
       });
     },
     FETCH_TAGS: ({commit})=>{
       axios.get(host+'/tags').then(res=>{
-        commit('SET_TAGS',res.data.data);
+        commit('SET_TAGS',res.data.tags);
       })
     }
   },
